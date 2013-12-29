@@ -1,0 +1,10 @@
+*~
+.Rhistory
+#*
+.#*
+*.lock
+*.out
+cache/*
+
+*.o
+*.so

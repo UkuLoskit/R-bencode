@@ -1,0 +1,14 @@
+Package: bencode
+Type: Package
+Title: bencode endoder and decoder for R
+Version: 1.0
+Date: 2014-01-01
+Author: Vitalie Spinu
+Maintainer: Vitalie Spinu <spinuvit@gmail.com>
+Description: Bencode endoer/decoder writen in C api. Bencode is used mostly in
+             torrent p2p application (http://en.wikipedia.org/wiki/Bencode).
+             Bencode is also used as a transport protocol in clojure nrepl
+             (https://github.com/clojure/tools.nrepl)
+License: GPL 
+Depends: R (>= 3.0.0)
+BugReports: https://github.com/vitoshka/bencode/issues
