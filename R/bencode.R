@@ -1,11 +1,10 @@
 
-### DECODER
+### RAW DECODER/ENCODER
 ben_decode <- function(str){
     if(!is.character(str)) stop("str must be a character vector")
     .Call("decode1", str)
 }
 
-### ENCODER
 ben_encode <- function(obj){
 
     enc_s <- function(str, collapse = TRUE){
@@ -32,6 +31,15 @@ ben_encode <- function(obj){
     }
 }
 
+### R DECODER/ENCODER
+benRdecode <- function(str){
+    stop("not implemente yet")
+}
+
+benRencode <- function(str){
+    stop("not implemente yet")
+}
+
 ### CONSTRUCTOR
 bendict <- function(obj){
     obj <- as.list(obj)
@@ -49,4 +57,6 @@ setMethod("print", "bendict",
               cat("BENDICT:\n")
               str(unclass(x), no.list = T)
           })
+
+
 
