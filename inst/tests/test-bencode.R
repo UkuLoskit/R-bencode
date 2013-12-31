@@ -36,3 +36,10 @@ test_that("encode -> decode loop works", {
                             e = bendict(list(a = 1L, b = 2L, c = c("a", "b", "c"), d = "abcd"))))
           expect_identical(X, ben_decode(ben_encode(X)))
       })
+
+
+## ben_decode(ben_encode(iris$Sepal.Length))
+## library(microbenchmark)
+## microbenchmark(ben_decode(ben_encode(iris$Sepal.Length)), ben_decode(str) , times = 1000)
+## library(rbenchmark)
+## benchmark(ben_decode(ben_encode(iris$Sepal.Length)), replications = 10000)

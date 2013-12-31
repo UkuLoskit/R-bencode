@@ -17,6 +17,8 @@ ben_encode <- function(obj){
         nms <- enc_s(names(obj), FALSE)
         obj <- unlist(lapply(obj, ben_encode), recursive = FALSE)
         sprintf("d%se", paste0(nms, obj, collapse = ""))
+    } else if(is.factor(obj)){
+        ben_encode(as.character(obj))
     } else {
         switch(typeof(obj),
                pairlist =,
