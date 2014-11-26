@@ -15,24 +15,24 @@ is.dictlike(obj)
 as.bendict(obj)
 }
 \arguments{
-\item{...}{Key value pairs.}
+\item{...}{Key value pairs}
 
-\item{obj}{An R object.}
+\item{obj}{An R object}
 }
 \description{
 Bendict class is a convenience wrapper around named list to allow custom
 printer.
 }
 \details{
-\itemize{
-  \item{\code{bendict}}{\code{bendict} constructor.}
-  \item{\code{is.bendict}}{TRUE if the object is a \code{bendict.}}
+\code{bendict}: Constructor similar to \code{list(...)}.
 
-\item{\code{is.dictlike}}{TRUE if object is a \code{bendict} or can be treated as
-such. An object is \code{dictlike} if it's a vector or list and all its names have
-positive length.}
+\code{is.bendict}: TRUE if the object is a \code{bendict}.
 
-\item{\code{as.bendict}}{Convert to \code{bendict} object.}}
+\code{is.dictlike}: TRUE if object is a \code{bendict} or can be treated
+as such. An object is \code{dictlike} if it's a vector or list and all its
+names have positive length.
+
+\code{as.bendict}: Convert to \code{bendict} object.
 }
 \examples{
 (x <- bendict(op = "eval", code = "log(5)"))

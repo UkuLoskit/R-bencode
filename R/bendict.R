@@ -3,18 +3,18 @@
 ##' Bendict class is a convenience wrapper around named list to allow custom
 ##' printer.
 ##'
-##' \itemize{
-##'   \item{\code{bendict}}{\code{bendict} constructor.}
-##'   \item{\code{is.bendict}}{TRUE if the object is a \code{bendict.}}
-##'
-##'   \item{\code{is.dictlike}}{TRUE if object is a \code{bendict} or can be treated as
-##' such. An object is \code{dictlike} if it's a vector or list and all its names have
-##' positive length.}
-##'
-##'   \item{\code{as.bendict}}{Convert to \code{bendict} object.}}
+##'   \code{bendict}: Constructor similar to \code{list(...)}.
 ##' 
-##' @param ... Key value pairs.
-##' @param obj An R object.
+##'   \code{is.bendict}: TRUE if the object is a \code{bendict}.
+##'
+##'   \code{is.dictlike}: TRUE if object is a \code{bendict} or can be treated
+##' as such. An object is \code{dictlike} if it's a vector or list and all its
+##' names have positive length.
+##'
+##'   \code{as.bendict}: Convert to \code{bendict} object.
+##' 
+##' @param ... Key value pairs
+##' @param obj An R object
 ##' @export
 ##' @examples
 ##'
@@ -67,7 +67,7 @@ as.bendict <- function(obj){
     }
 }
 
-##' @method print
+##' @method print bendict
 ##' @export
 print.bendict <- function(x, ...){
     if(length(x) == 0)

@@ -8,6 +8,9 @@ bencode(obj)
 
 bdecode(obj)
 }
+\arguments{
+\item{obj}{An R object.}
+}
 \description{
 Functions to convert R objects from/to bencoded representation.
 }

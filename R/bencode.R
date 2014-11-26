@@ -76,6 +76,8 @@ bencode <- function(obj){
 }
 
 ##' @rdname bencode
+##' @param obj An R object.
+##' @useDynLib bencode C_bdecode
 ##' @export
 bdecode <- function(obj){
     if(inherits(obj, "connection")){

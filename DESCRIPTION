@@ -10,6 +10,4 @@ Description: Bencode is used mostly in torrent p2p application
     transport protocol in R's nREPL (https://github.com/vspinu/R-nREPL)
     and Clojure nREPL (https://github.com/clojure/tools.nrepl)
 License: GPL
-Depends:
-    R (>= 2.14.1)
 BugReports: https://github.com/vspinu/bencode/issues
