@@ -1,9 +1,11 @@
 #include "bencode.h"
 
 SEXP parse_switch( const char **c );
-static char *err_wrong_enc = "Wrong encoding '%c'. Allowed values are i (int),l (list),d (dict) or a digit (string).";
+/* static char *err_wrong_enc = "Wrong encoding '%c'. Allowed values are i (int),l (list),d (dict) or a digit (string)."; */
 
 SEXP parse_i( const char **c ){
+  PRN("in i: %c\n", **c);
+
   if(  **c != 'i' ) error("integer parsing should start with 'i'. Encountered '%c'.", **c);
   (*c)++; 
 
@@ -18,9 +20,9 @@ SEXP parse_i( const char **c ){
   return ScalarInteger(ans);
 }
 
-
+// return Schalar String
 SEXP parse_s( const char **c ){
-  // return Schalar String
+
   if(! DIGIT(**c)) error("string parsing should start with an integer descriptor. Encountered '%c'", **c);
 
   long long len = 0;
@@ -43,9 +45,9 @@ SEXP parse_s( const char **c ){
   return mkString(newc);
 }
 
-
+// return VECTORSXP
 SEXP parse_d( const char **c ){
-  // return VECTORSXP
+  
   if(  **c != 'd' ) error("Dict should start with 'd'. Encountered '%c'.", **c);
   (*c)++;
   
@@ -61,27 +63,41 @@ SEXP parse_d( const char **c ){
     D = CONS(parse_switch(c), D);
   }
   (*c)++;
-  K = reversePairList(K);
-  D = reversePairList(D);
+
+  SEXP ans;
+
+  if( len == 0 ){
+
+    ans = allocVector(VECSXP, 0);
+    setAttrib(ans, R_ClassSymbol, mkString("bendict"));
+    
+  } else {
+
+    K = reversePairList(K);
+    D = reversePairList(D);
+
+    SEXP nms;
+    int i = 0;
   
-  SEXP nms, ans;
-  int i = 0;
-  PROTECT(nms = allocVector(STRSXP, len));
-  PROTECT(ans = allocVector(VECSXP, len));
-  for( i = 0; K != R_NilValue; i++, K = CDR(K), D = CDR(D) ){
-    SET_STRING_ELT(nms, i, STRING_ELT(CAR(K), 0));
-    SET_VECTOR_ELT(ans, i, CAR(D));
+    PROTECT(nms = allocVector(STRSXP, len));
+    PROTECT(ans = allocVector(VECSXP, len));
+    for( i = 0; K != R_NilValue; i++, K = CDR(K), D = CDR(D) ){
+      SET_STRING_ELT(nms, i, STRING_ELT(CAR(K), 0));
+      SET_VECTOR_ELT(ans, i, CAR(D));
+    }
+    setAttrib(ans, R_NamesSymbol, nms);
+    setAttrib(ans, R_ClassSymbol, mkString("bendict"));
+    UNPROTECT(2);
   }
-  setAttrib(ans, R_NamesSymbol, nms);
-  setAttrib(ans, R_ClassSymbol, mkString("bendict"));
-  UNPROTECT(2);
-  
+
+  PRN("out of d: %c\n", **c)
+
   return(ans);
 }
 
-
+// return VECTORSXP
 SEXP parse_l( const char **c ){
-  // return VECTORSXP
+
   if(  **c != 'l' ) error("List parsing should start with 'l'. Encountered '%c'.", **c);
   (*c)++;
   
@@ -97,37 +113,49 @@ SEXP parse_l( const char **c ){
     same = same && ((prev == 's' && DIGIT(**c)) || (prev == 'i' && **c == 'i'));
     ans = CONS(parse_switch(c), ans);
   }
-  ans = reversePairList(ans);
-  
+
   if ( **c ) (*c)++;
   PRN("out of l: %c\n", **c);
   PRN("same: %d\n", same);
 
-  if( same ){
-    // convert to appropriate vector
-    int type, i = 0;
-    SEXP newans;
-    switch( prev ){
-    case 'i':
-      PROTECT(newans = allocVector(INTSXP, len));
-      for( i = 0; ans != R_NilValue; i++, ans = CDR(ans)){
-        INTEGER(newans)[i] = INTEGER(CAR(ans))[0];
+  if( len == 0){
+
+    return(allocVector(VECSXP, 0));
+    
+  } else {
+    
+    ans = reversePairList(ans);
+    
+    if( ! same ) {
+      
+      return PairToVectorList(ans);
+      
+    } else {
+      // convert to appropriate vector
+      int type, i = 0;
+      SEXP newans;
+      switch( prev ){
+      case 'i':
+	PROTECT(newans = allocVector(INTSXP, len));
+	for( i = 0; ans != R_NilValue; i++, ans = CDR(ans)){
+	  INTEGER(newans)[i] = INTEGER(CAR(ans))[0];
+	}
+	UNPROTECT(1);
+	return(newans);
+      case 's':
+	PROTECT(newans = allocVector(STRSXP, len));
+	for( i = 0; ans != R_NilValue; i++, ans = CDR(ans)){
+	  SET_STRING_ELT( newans, i, STRING_ELT(CAR(ans), 0) );
+	}
+	UNPROTECT(1);
+	return(newans);
+      default:
+	return(PairToVectorList(ans));
       }
-      UNPROTECT(1);
-      return(newans);
-    case 's':
-      PROTECT(newans = allocVector(STRSXP, len));
-      for( i = 0; ans != R_NilValue; i++, ans = CDR(ans)){
-        SET_STRING_ELT( newans, i, STRING_ELT(CAR(ans), 0) );
-      }
-      UNPROTECT(1);
-      return(newans);
-    default:
-      return(PairToVectorList(ans));
     }
   }
-  return PairToVectorList(ans);
 }
+
 
 
 SEXP parse_switch( const char **c ){
@@ -140,12 +168,12 @@ SEXP parse_switch( const char **c ){
     return(parse_l(c));
   default:
     if( DIGIT(**c) ) return(parse_s(c));
-    else error("Wrong encoding '%c'. Allowed values are i,l,d or a digit.", **c);
+    else error("Wrong encoding '%c'. Allowed values are i, l, d or a digit.", **c);
   }
 }
 
 
-SEXP decode1( SEXP str ) {
+SEXP C_bdecode( SEXP str ) {
 
   if( ! isString(str) ) error("bcencode: input must be a character string");
   const char *c = CHAR(STRING_ELT(str, 0));
@@ -161,8 +189,3 @@ SEXP decode1( SEXP str ) {
   else
     return( reversePairList(ans) );
 }
-
-
-// Local Variables:
-// tags-table-list: ("/home/vitoshka/bin/R-devel/TAGS")
-// End:

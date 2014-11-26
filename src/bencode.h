@@ -1,10 +1,10 @@
-// #ifdef BENDEBUG
-
 #include <Rinternals.h>
 #include <stdio.h>
 
+/* #define BENDEBUG */
+
 #ifdef BENDEBUG
-#define PRN(X, args...) printf(X, args)
+#define PRN(X, args...) printf(X, args);
 #else
 #define PRN(X, args...) ;
 #endif
@@ -13,7 +13,8 @@
 
 
 SEXP reversePairList( SEXP head ){
-  if( !isPairList( head ) ) error("Wrong argument type to reversePairList: %s", type2str(TYPEOF(head)));
+  if( !isPairList( head ) )
+    error("Wrong argument type to reversePairList: %s", type2str(TYPEOF(head)));
   SEXP tail = CDR(head), tmp;
   SETCDR(head, R_NilValue);
   while( tail != R_NilValue ){
