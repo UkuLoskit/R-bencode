@@ -158,8 +158,12 @@ bdecode <- function(obj){
 }
 
 .enc_string <- function(str, collapse = TRUE){
-    out <- paste0(nchar(str), ":", str)
-    if(collapse) paste(out, collapse = "")
-    else out
+    ## all empty objects are encoded as NULL
+    if(length(str) == 0) "4:NULL"
+    else {
+        out <- paste0(nchar(str), ":", str)
+        if(collapse) paste(out, collapse = "")
+        else out
+    }
 }
 

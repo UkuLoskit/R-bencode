@@ -42,9 +42,10 @@ is.bendict <- function(obj){
 ##' @rdname bendict
 ##' @export
 is.dictlike <- function(obj){
-    is.bendict(obj) || ( is.vector(obj) &&
-                          !is.null(nms <- names(obj)) &&
-                          all(nzchar(nms)) )
+    is.bendict(obj) ||
+      ( is.recursive(obj) &&
+         !is.null(nms <- names(obj)) &&
+         all(nzchar(nms)) )
 }
 
 ##' @rdname bendict

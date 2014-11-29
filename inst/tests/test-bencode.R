@@ -43,6 +43,7 @@ bdecode(bencode(list(op = "bbb", status = c("err", "unknown", "done"))))
 
 bdecode(bencode(list(empty = list(), empty2 = bendict())))
 
+bdecode(bencode(character(0))) == "NULL"
 
 ## bdecode(bencode(iris$Sepal.Length))
 ## library(microbenchmark)
