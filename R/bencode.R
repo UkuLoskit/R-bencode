@@ -144,15 +144,20 @@ bdecode <- function(obj){
 .decode_con <- function(con){
     ## should be in C, but R's API sucks pickles
     c <- readChar(con, 1L)
-    if (c ==  "e")
+    if (length(c) == 0L) {
+        condition <- simpleError("End of input")
+        class(condition) <- c("endOfInput", class(condition))
+        signalCondition(condition)
+    }
+    else if (c == "e")
         NULL ## termination
-    else if( c == "d" )
+    else if (c == "d")
         .decode_d(con)
-    else if (c ==  "i")
+    else if (c == "i")
         .decode_i(con)
     else if (c == "l")
         .decode_l(con)
-    else{
+    else {
         .decode_s(con, c)
     }
 }
