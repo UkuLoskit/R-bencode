@@ -163,8 +163,8 @@ bdecode <- function(obj){
 }
 
 .enc_string <- function(str, collapse = TRUE){
-    ## all empty objects are encoded as NULL
-    if(length(str) == 0) "4:NULL"
+    ## all empty objects are encoded as empty list == nil in emacs
+    if (length(str) == 0) "le"
     else {
         out <- paste0(nchar(str), ":", str)
         if(collapse) paste(out, collapse = "")
