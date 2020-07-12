@@ -91,7 +91,7 @@ bdecode <- function(obj){
 ## we cannot read at C level, R doesn't allow that
 .read_till_char <- function(con, char){
     accum <- list()
-    c <- readChar(con, 1L)
+    c <- readChar(con, 1L, useBytes=TRUE)
     while(c != char){
         accum[length(accum) + 1L] <- c
         c <- readChar(con, 1L)
@@ -109,7 +109,7 @@ bdecode <- function(obj){
     len <- paste0(first_char, .read_till_char(con, ":"))
     len <- as.integer(len)
     if(is.na(len)) stop("bdecode error while reading string's len.")
-    readChar(con, len)
+    readChar(con, len, useBytes=TRUE)
 }
 
 .decode_l <- function(con){
@@ -143,7 +143,7 @@ bdecode <- function(obj){
 
 .decode_con <- function(con){
     ## should be in C, but R's API sucks pickles
-    c <- readChar(con, 1L)
+    c <- readChar(con, 1L, useBytes=TRUE)
     if (length(c) == 0L) {
         condition <- simpleError("End of input")
         class(condition) <- c("endOfInput", class(condition))
